@@ -1,0 +1,38 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security4">
+<head>
+	<link type="text/css" rel="stylesheet" href="css/bootstrap.min.css" th:href="@{css/bootstrap.min.css}" />
+</head>
+<body>
+	<h1>Employee List</h1>
+	<table class="table table-striped">
+		<tr>
+			<th>Name</th>
+			<th sec:authorize="hasAuthority('ADMIN')">Date of birth</th>
+			<th>Position</th>
+			<th sec:authorize="hasAuthority('ADMIN')">Salary</th>
+			<th>Department</th>
+		</tr>
+		<tr th:each= "employee : ${employees}">
+			<td th:text="${employee.name}">Name</td>
+			<td sec:authorize="hasAuthority('ADMIN')" th:text="${employee.birthdate}">Date of Birth</td>
+			<td th:text="${employee.position}">Position</td>
+			<td sec:authorize="hasAuthority('ADMIN')" th:text="${employee.salary}">Salary</td>
+			<td><a th:href="${employee.department} ? @{/departmentview/{id}(id=${employee.department.id})} : null"><span  th:text="${employee.department} ? ${employee.department.name} : null">Department</span></a></td><!-- Department names link to a more detailed management page on the given department -->
+			<td sec:authorize="hasAuthority('ADMIN')"><a th:href="@{/deleteemployee/{id}(id=${employee.id})}" class="btn-danger">Delete</a></td>
+			<td sec:authorize="hasAuthority('ADMIN')"><a th:href="@{/editemployee/{id}(id=${employee.id})}">Edit</a></td>
+		</tr>
+		<tr sec:authorize="hasAuthority('ADMIN')"><td><a th:href="@{/addemployee}" class="btn btn-primary">Add a new employee</a></td></tr>
+	</table>
+	<nav>
+		<ul>
+			<li><a th:href="@{/departmentlist}">Department List</a></li>
+			<li sec:authorize="hasAuthority('ADMIN')"><a th:href="@{/userlist}">User List</a></li>
+		</ul>
+	</nav>
+	<p th:inline="text"><i>You are signed in as <b>[[${#httpServletRequest.remoteUser}]]</b></i></p>
+	<form th:action="@{/logout}" method="post">
+		<input type="submit" value="Sign Out"/>
+	</form>
+</body>
+</html>

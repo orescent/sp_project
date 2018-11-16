@@ -1,0 +1,40 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+	<head>
+		<link type="text/css" rel="stylesheet" href="css/bootstrap.min.css" th:href="@{css/bootstrap.min.css}" />
+	</head>
+	<body>
+		<h1>User List</h1>
+		<table class="table table-striped">
+			<tr>
+				<th>Username</th>
+				<th>Email</th>
+				<th>Role</th>
+			</tr>
+			<tr th:each= "user : ${users}">
+				<td th:text="${user.username}">Username</td>
+				<td th:text="${user.email}">Email</td>
+				<td th:text="${user.role}">Role</td>
+				<td th:if="${#httpServletRequest.remoteUser} == 'admin'"><!-- Admin has access to special button: Promote if the given user has simple user rights or Demote if the user has Admin rights -->
+					<form th:object=${user} th:action="${user.role} == 'USER' ? @{/promote/{id}(id=${user.id})} : @{/demote/{id}(id=${user.id})}" action="#" method="post">
+						<input type="submit" th:value="${user.role} == 'USER' ? 'Promote' : 'Demote'"></input>
+					</form>
+				</td>
+				<td th:if="${#httpServletRequest.remoteUser} == 'admin'"><a th:href="@{/deleteuser/{id}(id=${user.id})}" class="btn-danger">Delete</a></td>
+			</tr>
+			<tr th:if="${#httpServletRequest.remoteUser} == 'admin'">
+				<td><a th:href="@{/adduser}" class="btn btn-primary">Add a new user</a></td>
+			</tr>
+		</table>
+		<nav>
+			<ul>
+				<li><a th:href="@{/employeelist}">Employee List</a></li>
+				<li><a th:href="@{/departmentlist}">Department List</a></li>
+			</ul>
+		</nav>
+		<p th:inline="text"><i>You are signed in as <b>[[${#httpServletRequest.remoteUser}]]</b></i></p>
+		<form th:action="@{/logout}" method="post">
+			<input type="submit" value="Sign Out"/>
+		</form>
+	</body>
+</html>

@@ -1,0 +1,21 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+	<head>
+		<link type="text/css" rel="stylesheet" href="css/bootstrap.min.css" th:href="@{css/bootstrap.min.css}" />
+	</head>
+	<body>
+		<h1>Add a new department</h1>
+		<div>
+			<div class="form-group container">
+				<form th:object="${department}" th:action="@{savedepartment}" action="#" method="post">
+					<label for="name">Department name</label>
+					<input type="text" id="name" th:field="*{name}" class="form-control" required/>
+					<input type="submit" value="Save"></input>
+				</form>
+				<form th:object="${department}" th:action="@{/cancel/department}" action="#" method="post">
+					<input type="submit" value="Cancel"></input>
+				</form>
+			</div>
+		</div>
+	</body>
+</html>

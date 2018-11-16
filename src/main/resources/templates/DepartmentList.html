@@ -1,0 +1,39 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security4">
+	<head>
+		<link type="text/css" rel="stylesheet" href="css/bootstrap.min.css" th:href="@{css/bootstrap.min.css}" />
+	</head>
+	<body>
+		<h1>Department List</h1>
+		<table class="table table-striped">
+			<tr>
+				<th>Department</th>
+				<th>Director</th>
+				<th>Number of employees</th>
+				<th sec:authorize="hasAuthority('ADMIN')">Salary budget</th>
+			</tr>
+			<tr th:each= "department : ${departments}">
+				<td th:text="${department.name}"></td>
+				<div th:each= "director: ${directors}" th:if="${director.department.name == department.name}"><!-- finds the right director name for the department -->
+					<td th:text="${director.name}"></td>
+				</div>
+				<td th:if="${department.hasDirector(employees)==false}"></td><!-- empty cell for the departments that don't have a director to compensate with the previous cell that does not even exist if there is no director -->
+				<td th:text="${department.size(employees)}"></td>
+				<td sec:authorize="hasAuthority('ADMIN')" th:text="${department.budget(employees)}"></td>
+				<td><a th:href="@{/departmentview/{id}(id=${department.id})}">View</a></td>
+				<td sec:authorize="hasAuthority('ADMIN')"><a th:href="@{/deletedepartment/{id}(id=${department.id})}" class="btn-danger">Delete</a></td>
+			</tr>
+			<tr sec:authorize="hasAuthority('ADMIN')"><td><a th:href="@{/adddepartment}" class="btn btn-primary">Add a new department</a></td></tr>
+		</table>
+		<nav>
+			<ul>
+				<li><a th:href="@{/employeelist}">Employee List</a></li>
+				<li sec:authorize="hasAuthority('ADMIN')"><a th:href="@{/userlist}">User List</a></li>
+			</ul>
+		</nav>
+		<p th:inline="text"><i>You are signed in as <b>[[${#httpServletRequest.remoteUser}]]</b></i></p>
+		<form th:action="@{/logout}" method="post">
+			<input type="submit" value="Sign Out"/>
+		</form>
+	</body>
+</html>

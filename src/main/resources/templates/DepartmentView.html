@@ -1,0 +1,45 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+	<head>
+		<link type="text/css" rel="stylesheet" href="css/bootstrap.min.css" th:href="@{css/bootstrap.min.css}" />
+	</head>
+	<body>
+		<div th:object="${department}">
+			<h1 th:text="|Department: ${department.get().name}|">Department</h1>
+			<h3 th:text="|Director: ${director}|">Director</h3>
+			<h3 th:text="|Number of employees: ${department.get().size(employees)}|">Number of employees</h3>
+			<h3 sec:authorize="hasAuthority('ADMIN')" th:text="|Salary budget: ${department.get().budget(employees)}|">Salary budget</h3>
+
+			<table class="table table-striped">
+				<tr>
+					<th>Name</th>
+					<th sec:authorize="hasAuthority('ADMIN')">Date of birth</th>
+					<th>Position</th>
+					<th sec:authorize="hasAuthority('ADMIN')">Salary</th>
+				</tr>
+				<tr th:each= "employee : ${employees}">
+					<td th:text="${employee.name}"></td>
+					<td sec:authorize="hasAuthority('ADMIN')" th:text="${employee.birthdate}"></td>
+					<td th:text="${employee.position}"></td>
+					<td sec:authorize="hasAuthority('ADMIN')" th:text="${employee.salary}"></td>
+					<td sec:authorize="hasAuthority('ADMIN')"><a th:href="@{/deleteemployee/{id}(id=${employee.id})}" class="btn-danger">Delete</a></td>
+					<td sec:authorize="hasAuthority('ADMIN')"><a th:href="@{/editemployee/{id}(id=${employee.id})}">Edit</a></td>
+				</tr>
+				<tr>
+					<td sec:authorize="hasAuthority('ADMIN')"><a th:href="@{/addemployee/{department}(department=${department.get().name})}" class="btn btn-primary">Add a new employee</a></td>
+				</tr>
+			</table>
+		</div>
+		<nav>
+			<ul>
+				<li><a th:href="@{/employeelist}">Employee List</a></li>
+				<li><a th:href="@{/departmentlist}">Department List</a></li>
+				<li sec:authorize="hasAuthority('ADMIN')"><a th:href="@{/userlist}">User List</a></li>
+			</ul>
+		</nav>
+		<p th:inline="text"><i>You are signed in as <b>[[${#httpServletRequest.remoteUser}]]</b></i></p>
+		<form th:action="@{/logout}" method="post">
+			<input type="submit" value="Sign Out"/>
+		</form>
+	</body>
+</html>

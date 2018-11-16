@@ -1,0 +1,37 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+	<head>
+		<link type="text/css" rel="stylesheet" href="css/bootstrap.min.css" th:href="@{css/bootstrap.min.css}" />
+	</head>
+	<body>
+		<h1>Add a new employee</h1>
+		<div>
+			<div class="form-group container">
+				<form th:object="${employee}" th:action="@{saveemployee}" action="#" method="post">
+					<label for="firstname">First name*</label>
+					<input type="text" id="firstname" th:field="*{firstName}" class="form-control" required/>
+					<label for="lastname">Last name*</label>
+					<input type="text" id="lastname" th:field="*{lastName}" class="form-control" required/>
+					<label for="birthdate">Date of birth</label>
+					<input type="text" id="birthdate" th:field="*{birthdate}" class="form-control"/>
+					<label for="position">Position*</label>
+					<input type="text" id="position" th:field="*{position}" class="form-control" required/>
+					<label for="salary">Salary*</label>
+					<input type="text" id="salary" th:field="*{salary}" class="form-control" required/>
+					<label for="catlist">Department</label>
+					<select id="catlist" th:field="*{department}" class="form-control">
+						<option th:value="null"></option>
+						<option th:each="department: ${departments}"
+								th:value="${department.id}"
+								th:text="${department.name}"></option>
+					</select>
+					<input type="submit" value="Save and create a new department" formaction="saveandadd"></input>
+					<input type="submit" value="Save"></input>
+				</form>
+				<form th:object="${employee}" th:action="@{/cancel/employee}" action="#" method="post">
+					<input type="submit" value="Cancel"></input>
+				</form>
+			</div>
+		</div>
+	</body>
+</html>
