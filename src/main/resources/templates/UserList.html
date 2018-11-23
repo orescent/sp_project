@@ -15,11 +15,12 @@
 				<td th:text="${user.username}">Username</td>
 				<td th:text="${user.email}">Email</td>
 				<td th:text="${user.role}">Role</td>
-				<td th:if="${#httpServletRequest.remoteUser} == 'admin'"><!-- Admin has access to special button: Promote if the given user has simple user rights or Demote if the user has Admin rights -->
+				<td th:if="${#httpServletRequest.remoteUser} == 'admin' AND ${user.username} != 'admin'"><!-- Admin has access to special button: Promote if the given user has simple user rights or Demote if the user has Admin rights -->
 					<form th:object=${user} th:action="${user.role} == 'USER' ? @{/promote/{id}(id=${user.id})} : @{/demote/{id}(id=${user.id})}" action="#" method="post">
 						<input type="submit" th:value="${user.role} == 'USER' ? 'Promote' : 'Demote'"></input>
 					</form>
 				</td>
+				<td th:if="${user.username} == 'admin'"></td>
 				<td th:if="${#httpServletRequest.remoteUser} == 'admin'"><a th:href="@{/deleteuser/{id}(id=${user.id})}" class="btn-danger">Delete</a></td>
 			</tr>
 			<tr th:if="${#httpServletRequest.remoteUser} == 'admin'">

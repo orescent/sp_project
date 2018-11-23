@@ -69,11 +69,13 @@ public class ProjectController {
 		return "employeelist";
 	}
 	
+	@PreAuthorize("hasAuthority('ADMIN')")
 	@RequestMapping(value="/employees", method=RequestMethod.GET) 			//Rest list for all employees
 	public @ResponseBody Iterable<Employee> employeeListRest() {
 		return erepository.findAll();
 	}
-
+	
+	@PreAuthorize("hasAuthority('ADMIN')")
 	@RequestMapping(value="/employee/{id}", method=RequestMethod.GET) 		//Rest detail for a specific employee
 	public @ResponseBody Optional<Employee> findEmployeeRest(@PathVariable("id") Long employeeId) {
 		return erepository.findById(employeeId);
